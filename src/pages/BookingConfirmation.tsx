@@ -39,8 +39,8 @@ export default function BookingConfirmation() {
         // Prefill form when user details load
         if (user) {
             (() => {
-                setName(user.name);
-                setEmail(user.email);
+                if (user.name) setName(user.name);
+                if (user.email) setEmail(user.email);
                 if (user.phone) setPhone(user.phone);
             })();
         }

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { dummyUser } from "../assets/assets.js";
+//import { dummyUser } from "../assets/assets.js";
 import api from "../lib/api.js";
 import toast from "react-hot-toast";
 
@@ -46,12 +46,17 @@ export const AppContextProvider = ({ children }: Props) => {
     // return true;
     try {
       setLoading(true);
-      const res = await api.post("/auth/login", { email, password })
-      const { token: userToken, ...UserData } = res.data;
-      localStorage.setItem("token", userToken);
-      setToken(userToken);
-      setUser(UserData);
-      toast.success(`Welcome ${UserData.name}`);
+      const res = await api.post("/auth/login", { email, password });
+      const rawData = res.data;
+      const userToken = rawData.token || rawData.user?.token;
+      const userData = rawData.user || (rawData._id ? rawData : (rawData.data || rawData));
+      
+      if (userToken) {
+        localStorage.setItem("token", userToken);
+        setToken(userToken);
+      }
+      setUser(userData);
+      toast.success(`Welcome ${userData?.name || userData?.email || ""}`);
       return true;
 
     } catch (error: any) {
@@ -63,19 +68,18 @@ export const AppContextProvider = ({ children }: Props) => {
   };
 
   const register = async (name: string, email: string, password: string, phone?: string, role?: string): Promise<boolean> => {
-    // console.log(name, email, password, phone, role);
-    // setToken(dummyUser.token);
-    // setUser(dummyUser as any);
-    // setToken(dummyUser.token);
-    // localStorage.setItem("token", dummyUser.token);
-    // return true;
     try {
       setLoading(true);
-      const res = await api.post("/auth/register", { name, email, password, phone, role })
-      const { token: userToken, ...UserData } = res.data;
-      localStorage.setItem("token", userToken);
-      setToken(userToken);
-      setUser(UserData);
+      const res = await api.post("/auth/register", { name, email, password, phone, role });
+      const rawData = res.data;
+      const userToken = rawData.token || rawData.user?.token;
+      const userData = rawData.user || (rawData._id ? rawData : (rawData.data || rawData));
+
+      if (userToken) {
+        localStorage.setItem("token", userToken);
+        setToken(userToken);
+      }
+      setUser(userData);
       toast.success(`Welcome to BookingApp Restaurant!`);
       return true;
 
@@ -97,10 +101,11 @@ export const AppContextProvider = ({ children }: Props) => {
   useEffect(() => {
     const loadUser = async () => {
       if (token) {
-        //setUser(dummyUser as any);
         try {
           const res = await api.get("/auth/me");
-          setUser(res.data);
+          const rawData = res.data;
+          const userData = rawData.user || (rawData._id ? rawData : (rawData.data || rawData));
+          setUser(userData);
         } catch (error: any) {
           console.log(error);
           toast.error(error?.response?.data?.message || error?.message);

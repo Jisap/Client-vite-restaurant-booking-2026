@@ -119,17 +119,17 @@ export default function Navbar() {
                 }
               >
                 <span className="size-7 rounded-full bg-secondary/20 border flex items-center justify-center text-xs uppercase">
-                  {user.name.charAt(0)}
+                  {(user?.name || user?.email || "U").charAt(0)}
                 </span>
-                <span className="max-w-[120px] truncate">{user.name.split(" ")[0]}</span>
+                <span className="max-w-[120px] truncate">{user?.name ? user.name.split(" ")[0] : (user?.email || "User")}</span>
               </button>
 
               {/* Dropdown Menu */}
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-white border border-outline-variant/30 ambient-shadow rounded-lg py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                   <div className="px-4 py-2 border-b border-outline-variant/10">
-                    <p className="text-sm text-primary truncate">{user.name}</p>
-                    <p className="text-xs text-black/55 truncate">{user.email}</p>
+                    <p className="text-sm text-primary truncate">{user?.name || "User"}</p>
+                    <p className="text-xs text-black/55 truncate">{user?.email || ""}</p>
                   </div>
                   <button
                     onClick={handleDashboardClick}
@@ -139,7 +139,7 @@ export default function Navbar() {
                     My Bookings
                   </button>
 
-                  {user.role === "admin" && (
+                  {user?.role === "admin" && (
                     <Link
                       to="/admin/dashboard"
                       className="flex items-center gap-3 px-4 py-2.5 text-xs text-black/55 hover:text-primary hover:bg-surface transition-colors cursor-pointer"
@@ -149,7 +149,7 @@ export default function Navbar() {
                     </Link>
                   )}
 
-                  {user.role === "owner" && (
+                  {user?.role === "owner" && (
                     <Link
                       to="/owner/dashboard"
                       className="flex items-center gap-3 px-4 py-2.5 text-xs text-black/55 hover:text-primary hover:bg-surface transition-colors cursor-pointer"
@@ -236,24 +236,24 @@ export default function Navbar() {
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-3">
                 <span className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary text-sm uppercase">
-                  {user.name.charAt(0)}
+                  {(user?.name || user?.email || "U").charAt(0)}
                 </span>
                 <div>
-                  <p className="text-sm text-primary">{user.name}</p>
-                  <p className="text-xs text-black/55">{user.email}</p>
+                  <p className="text-sm text-primary">{user?.name || "User"}</p>
+                  <p className="text-xs text-black/55">{user?.email || ""}</p>
                 </div>
               </div>
               <Link to="/dashboard" className="text-sm font-medium text-black/55 hover:text-primary">
                 My Bookings
               </Link>
 
-              {user.role === "admin" && (
+              {user?.role === "admin" && (
                 <Link to="/admin/dashboard" className="text-sm font-medium text-black/55 hover:text-primary">
                   Admin Console
                 </Link>
               )}
 
-              {user.role === "owner" && (
+              {user?.role === "owner" && (
                 <Link to="/owner/dashboard" className="text-sm font-medium text-black/55 hover:text-primary">
                   Owner Console
                 </Link>

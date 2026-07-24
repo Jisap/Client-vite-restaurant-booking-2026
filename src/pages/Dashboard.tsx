@@ -77,7 +77,7 @@ export default function Dashboard() {
                     {/* Welcoming header */}
                     <div className="pb-4 border-b border-outline-variant/10">
                         <h2 className="font-display text-2xl md:text-3xl font-semibold text-primary">
-                            Welcome back, {user.name.split(" ")[0]}
+                            Welcome back, {user?.name ? user.name.split(" ")[0] : (user?.email || "User")}
                         </h2>
                         <p className="text-xs text-black/55 mt-1.5">Manage your upcoming dining experiences.</p>
                     </div>
