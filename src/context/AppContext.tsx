@@ -63,12 +63,28 @@ export const AppContextProvider = ({ children }: Props) => {
   };
 
   const register = async (name: string, email: string, password: string, phone?: string, role?: string): Promise<boolean> => {
-    console.log(name, email, password, phone, role);
-    setToken(dummyUser.token);
-    setUser(dummyUser as any);
-    setToken(dummyUser.token);
-    localStorage.setItem("token", dummyUser.token);
-    return true;
+    // console.log(name, email, password, phone, role);
+    // setToken(dummyUser.token);
+    // setUser(dummyUser as any);
+    // setToken(dummyUser.token);
+    // localStorage.setItem("token", dummyUser.token);
+    // return true;
+    try {
+      setLoading(true);
+      const res = await api.post("/auth/register", { name, email, password, phone, role })
+      const { token: userToken, ...UserData } = res.data;
+      localStorage.setItem("token", userToken);
+      setToken(userToken);
+      setUser(UserData);
+      toast.success(`Welcome to BookingApp Restaurant!`);
+      return true;
+
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || error?.message);
+      return false;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const logout = () => {
